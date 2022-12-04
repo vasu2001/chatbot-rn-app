@@ -33,16 +33,24 @@ const CustomCamera = ({ onClose, onCapture }) => {
       }
    };
 
+   const onCameraReady = () => {
+      setCameraReady(true);
+   };
+
+   const _onClose = () => {
+      onClose?.();
+   };
+
    return (
       <View style={styles.container}>
          <Camera
             style={styles.camera}
             type={CameraType.back}
-            onCameraReady={() => setCameraReady(true)}
+            onCameraReady={onCameraReady}
             ref={cameraRef}
          >
             <View style={styles.closeContainer}>
-               <TouchableOpacity style={styles.button} onPress={onClose}>
+               <TouchableOpacity style={styles.button} onPress={_onClose}>
                   <Text style={styles.text}>X</Text>
                </TouchableOpacity>
             </View>
