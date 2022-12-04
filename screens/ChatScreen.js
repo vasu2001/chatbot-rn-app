@@ -16,7 +16,6 @@ const ChatScreen = () => {
       },
    ]);
    const [modalVisible, setModalVisible] = useState(false);
-   const userId = 1;
 
    const onLogout = () => {
       setUser(null);
@@ -32,11 +31,15 @@ const ChatScreen = () => {
       setModalVisible(true);
    };
 
+   const closeCamera = () => {
+      setModalVisible(false);
+   };
+
    const sendImageMessage = (image) => {
       if (!image?.uri) return;
-      setModalVisible(false);
+      closeCamera();
 
-      //       upload the file and append the message
+      //  TODO: upload the file and append the message
       onSend({
          _id: messages.length + 1,
          image: image.uri,
@@ -47,7 +50,7 @@ const ChatScreen = () => {
 
    const renderActions = () => {
       return (
-         <View style={{ flexDirection: "row", paddingBottom: 12 }}>
+         <View style={styles.actionRow}>
             <TouchableOpacity style={styles.select} onPress={openCamera}>
                <Text>Camera</Text>
             </TouchableOpacity>
@@ -64,18 +67,13 @@ const ChatScreen = () => {
          <GiftedChat
             scrollToBottom
             messages={messages}
-            onSend={(messages) => onSend(messages)}
+            onSend={onSend}
             renderActions={renderActions}
-            user={{
-               _id: userId,
-            }}
+            user={user}
          />
 
          <Modal visible={modalVisible} transparent>
-            <CustomCamera
-               onClose={() => setModalVisible(false)}
-               onCapture={sendImageMessage}
-            />
+            <CustomCamera onClose={closeCamera} onCapture={sendImageMessage} />
          </Modal>
       </View>
    );
@@ -93,6 +91,11 @@ const styles = StyleSheet.create({
       marginRight: 10,
    },
    select: {},
+
+   actionRow: {
+      flexDirection: "row",
+      paddingBottom: 12,
+   },
 
    camera: {
       marginVertical: 50,
