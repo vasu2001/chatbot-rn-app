@@ -1,0 +1,10 @@
+{
+   "initChats": [
+      "Please enter the corresponding no against your query",
+      "Case 1: wrong food item delivered",
+      "Case 2: different or expired grocery received",
+      "Case 3: adulterated food received",
+      "Case 4: item missing from the order",
+      "Case 5: other queries"
+   ]
+}

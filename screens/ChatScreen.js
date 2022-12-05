@@ -1,31 +1,43 @@
-import React, { useContext, useCallback, useState } from "react";
+import React, {
+   useContext,
+   useCallback,
+   useState,
+   useRef,
+   useEffect,
+} from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Modal } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
+import ChartService from "../service/ChatService";
 
 import CustomCamera from "../components.js/CustomCamera";
 import { UserContext } from "./MainScreen";
+import ChatService from "../service/ChatService";
 
 const ChatScreen = () => {
    const { user, setUser } = useContext(UserContext);
-   const [messages, setMessages] = useState([
-      {
-         _id: 1,
-         text: "Hello developer",
-         createdAt: new Date(),
-         user,
-      },
-   ]);
+   const [messages, setMessages] = useState([]);
    const [modalVisible, setModalVisible] = useState(false);
+   const caseType = useRef(-1);
+   const stage = useRef(0);
+
+   useEffect(() => {
+      ChartService.chat(caseType, stage).then(appendMessages);
+   }, []);
 
    const onLogout = () => {
       setUser(null);
    };
 
-   const onSend = useCallback((messages = []) => {
+   const appendMessages = useCallback((messages = []) => {
       setMessages((previousMessages) =>
          GiftedChat.append(previousMessages, messages),
       );
    }, []);
+
+   const onSend = (messages) => {
+      appendMessages(messages);
+      ChatService.chat(caseType, stage, messages).then(appendMessages);
+   };
 
    const openCamera = () => {
       setModalVisible(true);
